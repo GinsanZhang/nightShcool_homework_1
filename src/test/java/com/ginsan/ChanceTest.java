@@ -4,11 +4,55 @@
 package com.ginsan;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-public class LibraryTest {
-    @Test public void testSomeLibraryMethod() {
-        Library classUnderTest = new Library();
-        assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+import static org.assertj.core.api.Assertions.assertThat;
+
+
+public class ChanceTest {
+    @Test
+    public void should_get_the_chance_of_event_not_happen() {
+        // given
+        float fraction = 0.34F;
+        Chance chance = new Chance(fraction);
+        // when
+        // then
+        assertThat(chance.not()).isEqualToComparingFieldByField(new Chance(1-fraction));
+    }
+
+    @Test
+    public void should_get_the_chance_of_two_events_both_happen() {
+        // given
+        Chance chanceE1 = new Chance(0.6F);
+        Chance chanceE2 = new Chance(0.7F);
+        // when
+        Chance chanceE1AndE2=chanceE1.and(chanceE2);
+        // then
+        assertThat(chanceE1AndE2).isEqualToComparingFieldByField(new Chance(0.42F));
+    }
+
+    @Test
+    public void should_get_the_chance_of_two_events_at_least_happen_one() {
+        Chance chanceE1 = new Chance(0.6F);
+        Chance chanceE2 = new Chance(0.7F);
+        // when
+        Chance chanceE1AndE2=chanceE1.or(chanceE2);
+        // then
+        assertThat(chanceE1AndE2).isEqualToComparingFieldByField(new Chance(0.88F));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_throw_exception_when_fraction_is_small_than_zero() {
+        // given
+        new Chance(-1F);
+        // when
+        // then
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void should_throw_exception_when_fraction_is_bigger_than_one() {
+        // given
+        new Chance(2F);
+        // when
+        // then
     }
 }
